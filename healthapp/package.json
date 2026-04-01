@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "calculateBmi": "tsc && node bmi/bmiCalculator.ts"
+    "calculateBmi": "tsc && node bmi/bmiCalculator.ts",
+    "calculateExercises": "tsc && node bmi/exerciseCalculator.ts"
   },
   "author": "",
   "license": "ISC",
