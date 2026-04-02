@@ -1,3 +1,5 @@
+import { convertToNumber } from "./utils.ts";
+
 interface Results {
   periodLength: number;
   trainingDays: number;
@@ -8,7 +10,25 @@ interface Results {
   ratingDescription: string;
 }
 
-const calculateExercises = (dailyHours: number[], target: number): Results => {
+interface ExerciseArguments {
+  target: number;
+  dailyHours : number[];
+}
+
+const parseExerciseArguments = (args: string[]): ExerciseArguments => {
+  if (args.length < 4) throw new Error('Not enough arguments');
+
+  const target = convertToNumber(args[2]);
+
+  const dailyHours = args.slice(3).map(arg => convertToNumber(arg));
+
+  return {
+    target: target,
+    dailyHours: dailyHours
+  }
+}
+
+const calculateExercises = (target: number, dailyHours: number[]): Results => {
   const periodLength: number = dailyHours.length;
 
   const trainingDays: number = dailyHours.filter(hours => hours > 0).length;
@@ -20,7 +40,7 @@ const calculateExercises = (dailyHours: number[], target: number): Results => {
   const success: boolean = average < target ? false : true;
 
   let rating: number;
-  let ratingDescription;
+  let ratingDescription: string;
 
   if (average >= target * 1.5) {
     rating = 3;
@@ -44,4 +64,13 @@ const calculateExercises = (dailyHours: number[], target: number): Results => {
   }
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+try {
+  const { target, dailyHours } = parseExerciseArguments(process.argv);
+  console.log(calculateExercises(target, dailyHours));
+} catch (error: unknown) {
+  let errorMessage = 'Something bad happened.'
+  if (error instanceof Error) {
+    errorMessage += ' Error: ' + error.message;
+  }
+  console.log(errorMessage);
+}
