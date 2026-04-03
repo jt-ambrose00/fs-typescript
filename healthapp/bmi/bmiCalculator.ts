@@ -15,30 +15,30 @@ const parseBmiArguments = (args: string[]): Measurements => {
   return {
     height: height,
     weight: weight
-  }
-}
+  };
+};
 
 export const calculateBmi = (height: number, weight: number): string => {
   const heightInMeters = height / 100;
   const bmi = weight / (heightInMeters * heightInMeters);
 
   if (bmi < 18.5) {
-    return 'Underweight range'
+    return 'Underweight range';
   } else if (bmi < 25) {
-    return 'Normal range'
+    return 'Normal range';
   } else if (bmi < 30) {
-    return 'Overweight range'
+    return 'Overweight range';
   } else {
-    return 'Obese range'
+    return 'Obese range';
   }
-}
+};
 
 if (process.argv[1] === import.meta.filename) {
   try {
     const { height, weight } = parseBmiArguments(process.argv);
     console.log(calculateBmi(height, weight));
   } catch (error: unknown) {
-    let errorMessage = 'Something bad happened.'
+    let errorMessage = 'Something bad happened.';
     if (error instanceof Error) {
       errorMessage += ' Error: ' + error.message;
     }
