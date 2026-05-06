@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import type { NonSensitiveDiaryEntry, Weather, Visibility } from './types';
 import diaryService from './services/diaryService';
@@ -8,6 +9,7 @@ const App = () => {
   const [newWeather, setNewWeather] = useState<Weather>();
   const [newVisibility, setNewVisibility] = useState<Visibility>();
   const [newComment, setNewComment] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     diaryService.getAll().then(initialDiaries => {
@@ -17,6 +19,7 @@ const App = () => {
 
   const noteCreation = (event: React.SyntheticEvent) => {    
     event.preventDefault();
+    setErrorMessage('');
     diaryService.create({
       date: newDate,
       weather: newWeather as Weather,
@@ -25,14 +28,26 @@ const App = () => {
     })
       .then(returnedDiary => {
         setDiaries(diaries.concat(returnedDiary))
+        setNewDate('');
+        setNewComment('');
       })
-    setNewDate('');
-    setNewComment('');
+      .catch(error => {
+        if (axios.isAxiosError(error)) {
+          console.log('error.response', error.response);
+          setErrorMessage(`Error: ${error.response?.data.error[0].message}`);
+        } else {
+          console.log(error);
+          setErrorMessage('other error');
+        }
+      })
   };
 
   return (
     <div>
       <h3>Add New Entry</h3>
+      {errorMessage && (
+        <p style={{ color: 'red' }}>{errorMessage}</p>
+      )}
       <form onSubmit={noteCreation}>
         date:
         <input
