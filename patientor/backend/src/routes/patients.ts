@@ -10,13 +10,13 @@ import patientService from '../services/patientService.ts';
 import { 
   NewPatientSchema,
   type NewPatientEntry,
-  type NonSensitivePatientEntry,
+  type NonSensitivePatient,
   type Patient 
 } from '../types.ts';
 
 const router = express.Router();
 
-router.get('/', (_req, res: Response<NonSensitivePatientEntry[]>) => {
+router.get('/', (_req, res: Response<NonSensitivePatient[]>) => {
   const data = patientService.getNonSensitiveEntries();
   res.send(data);
 });
