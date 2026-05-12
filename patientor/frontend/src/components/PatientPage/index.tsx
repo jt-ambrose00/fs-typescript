@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { Patient, Diagnosis } from "../../types";
 import patientService from "../../services/patients";
 import diagnosesService from "../../services/diagnoses";
+import EntryDetails from './EntryDetails';
 
 const PatientPage = () => {
   const [patient, setPatient] = useState<Patient>();
@@ -26,11 +27,6 @@ const PatientPage = () => {
     void fetchPatient();
     void fetchDiagnoses();
   }, [id]);
-
-  const getDiagnosisName = (code: string) => {
-    const diagnosis = diagnoses?.find(diagnosis => diagnosis.code === code);
-    return diagnosis?.name;
-  };
 
   if (!patient) {
     return <Typography>Loading...</Typography>;
@@ -59,20 +55,7 @@ const PatientPage = () => {
         </Typography>
         {patient.entries.length === 0 && <Typography>No entries...</Typography>}
         {patient.entries.map((entry) => (
-          <div key={entry.id}>
-            <Typography>
-              <Box component='span' fontWeight='bold'>{entry.date}: </Box> {entry.description}
-            </Typography>
-            <List sx={{ listStyleType: 'disc', pl: 2 }}>
-              {entry.diagnosisCodes?.map((code) => (
-                <ListItem key={code} sx={{ display: 'list-item', py: 0 }}>
-                  <ListItemText>
-                    {code} {getDiagnosisName(code)}
-                  </ListItemText>
-                </ListItem>
-              ))}
-            </List>
-          </div>
+          <EntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />
         ))}
       </Box>
     </div>
