@@ -9,9 +9,12 @@ import patientService from '../services/patientService.ts';
 
 import { 
   NewPatientSchema,
+  NewEntrySchema,
   type NewPatientEntry,
+  type NewEntry,
   type NonSensitivePatient,
-  type Patient 
+  type Patient,
+  type Entry
 } from '../types.ts';
 
 const router = express.Router();
@@ -22,8 +25,7 @@ router.get('/', (_req, res: Response<NonSensitivePatient[]>) => {
 });
 
 router.get('/:id', (req, res: Response<Patient>) => {
-  const patients = patientService.getPatients();
-  const patient = patients.find(patient => patient.id === req.params.id);
+  const patient = patientService.getPatientById(req.params.id);
   res.send(patient);
 });
 
@@ -34,6 +36,19 @@ const newPatientParser = (
 ) => { 
   try {
     NewPatientSchema.parse(req.body);
+    next();
+  } catch (error: unknown) {
+    next(error);
+  }
+};
+
+const newEntryParser = (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+) => { 
+  try {
+    NewEntrySchema.parse(req.body);
     next();
   } catch (error: unknown) {
     next(error);
@@ -59,6 +74,14 @@ router.post('/', newPatientParser, (
 ) => {
   const addedPatient = patientService.addPatient(req.body);
   res.json(addedPatient);
+});
+
+router.post('/:id/entries', newEntryParser, (
+  req: Request<{ id: string}, unknown, NewEntry>,
+  res: Response<Entry>
+) => {
+  const addedEntry = patientService.addEntry(req.body, req.params.id);
+  res.json(addedEntry);
 });
 
 router.use(errorMiddleware);
