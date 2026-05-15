@@ -45,14 +45,14 @@ export interface HospitalEntry extends BaseEntry {
   }
 }
 
-const HealthCheckRating = {
+export const HealthCheckRating = {
   Healthy: 0,
   LowRisk: 1,
   HighRisk: 2,
   CriticalRisk: 3,
 } as const;
 
-type HealthCheckRating = typeof HealthCheckRating[keyof typeof HealthCheckRating];
+export type HealthCheckRating = typeof HealthCheckRating[keyof typeof HealthCheckRating];
 
 export interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
@@ -65,3 +65,5 @@ export type Entry =
   | HealthCheckEntry;
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
+
+export type HealthCheckEntryFormValues = Omit<HealthCheckEntry, "id">;
