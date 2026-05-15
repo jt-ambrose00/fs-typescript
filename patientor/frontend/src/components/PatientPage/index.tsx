@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography, Button } from '@mui/material';
 
-import { Patient, Diagnosis, HealthCheckEntryFormValues } from "../../types";
+import { Patient, Diagnosis, EntryFormValues } from "../../types";
 import patientService from "../../services/patients";
 import diagnosesService from "../../services/diagnoses";
 import EntryDetails from './EntryDetails';
-import AddHealthCheckEntry from '../AddEntry/AddHealthCheckEntry';
+import AddEntry from '../AddEntry/index';
 
 const PatientPage = () => {
   const [patient, setPatient] = useState<Patient>();
@@ -39,7 +39,7 @@ const PatientPage = () => {
     setError(undefined);
   };
 
-  const submitNewEntry = async (values: HealthCheckEntryFormValues) => {
+  const submitNewEntry = async (values: EntryFormValues) => {
     try {
       if (!patient?.id) return;
       const entry = await patientService.createEntry(values, patient.id);
@@ -81,7 +81,7 @@ const PatientPage = () => {
         <Typography>
           date of birth: {patient.dateOfBirth}
         </Typography>
-        <AddHealthCheckEntry
+        <AddEntry
           modalOpen={modalOpen}
           onClose={closeModal}
           onSubmit={submitNewEntry}

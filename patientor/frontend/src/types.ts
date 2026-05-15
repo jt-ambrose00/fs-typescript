@@ -66,4 +66,13 @@ export type Entry =
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
 
+export type OccupationalHealthcareEntryFormValues = Omit<OccupationalHealthcareEntry, "id">;
+
+export type HospitalEntryFormValues = Omit<HospitalEntry, "id">;
+
 export type HealthCheckEntryFormValues = Omit<HealthCheckEntry, "id">;
+
+export type EntryFormValues =
+  | OccupationalHealthcareEntryFormValues
+  | HospitalEntryFormValues
+  | HealthCheckEntryFormValues;
