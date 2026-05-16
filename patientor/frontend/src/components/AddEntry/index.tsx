@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Alert, Dialog, DialogTitle, DialogContent, Divider, Select, SelectChangeEvent, MenuItem, InputLabel } from '@mui/material';
 
-import { EntryFormValues } from "../../types";
+import { EntryFormValues, Diagnosis } from "../../types";
 import AddHealthCheckForm from "./AddHealthCheckForm";
 import AddHospitalForm from "./AddHospitalForm";
 import AddOccupationalHealthcareForm from "./AddOccupationalHealthcareForm";
@@ -10,10 +10,11 @@ interface Props {
   modalOpen: boolean;
   onClose: () => void;
   onSubmit: (values: EntryFormValues) => void;
+  diagnoses: Diagnosis[] | undefined;
   error?: string;
 }
 
-const AddEntry = ({ modalOpen, onClose, onSubmit, error }: Props) => {
+const AddEntry = ({ modalOpen, onClose, onSubmit, diagnoses, error }: Props) => {
   const [type, setType] = useState<string>('');
 
   const changeEntryType = (event: SelectChangeEvent) => {
@@ -44,13 +45,25 @@ const AddEntry = ({ modalOpen, onClose, onSubmit, error }: Props) => {
           </MenuItem>
         </Select>
         {type === 'HealthCheck' && (
-          <AddHealthCheckForm onClose={onClose} onSubmit={onSubmit} />
+          <AddHealthCheckForm
+            onClose={onClose}
+            onSubmit={onSubmit}
+            diagnoses={diagnoses}
+          />
         )}
         {type === 'Hospital' && (
-          <AddHospitalForm onClose={onClose} onSubmit={onSubmit} />
+          <AddHospitalForm
+            onClose={onClose}
+            onSubmit={onSubmit}
+            diagnoses={diagnoses}
+          />
         )}
         {type === 'OccupationalHealthcare' && (
-          <AddOccupationalHealthcareForm onClose={onClose} onSubmit={onSubmit} />
+          <AddOccupationalHealthcareForm
+            onClose={onClose}
+            onSubmit={onSubmit}
+            diagnoses={diagnoses}
+          />
         )}
       </DialogContent>
     </Dialog>

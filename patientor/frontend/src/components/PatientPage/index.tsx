@@ -85,6 +85,7 @@ const PatientPage = () => {
           modalOpen={modalOpen}
           onClose={closeModal}
           onSubmit={submitNewEntry}
+          diagnoses={diagnoses}
           error={error}
         />
         <Button

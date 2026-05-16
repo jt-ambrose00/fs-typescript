@@ -1,18 +1,19 @@
 import { useState, SyntheticEvent } from "react";
-import { TextField, Grid, Button } from '@mui/material';
+import { TextField, Grid, Button, SelectChangeEvent, InputLabel, Select, MenuItem, Input } from '@mui/material';
 
-import { OccupationalHealthcareEntryFormValues } from "../../types";
+import { OccupationalHealthcareEntryFormValues, Diagnosis } from "../../types";
 
 interface Props {
   onClose: () => void;
   onSubmit: (values: OccupationalHealthcareEntryFormValues) => void;
+  diagnoses: Diagnosis[] | undefined;
 }
 
-const AddOccupationalHealthcareForm = ({ onClose, onSubmit }: Props) => {
+const AddOccupationalHealthcareForm = ({ onClose, onSubmit, diagnoses }: Props) => {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [specialist, setSpecialist] = useState('');
-  const [diagnosisCodes, setDiagnosisCodes] = useState('');
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
   const [employerName, setEmployerName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -24,7 +25,7 @@ const AddOccupationalHealthcareForm = ({ onClose, onSubmit }: Props) => {
       description,
       date,
       specialist,
-      diagnosisCodes: diagnosisCodes.split(','),
+      diagnosisCodes,
       employerName,
       sickLeave: {
         startDate,
@@ -34,53 +35,85 @@ const AddOccupationalHealthcareForm = ({ onClose, onSubmit }: Props) => {
     setDescription('');
     setDate('');
     setSpecialist('');
-    setDiagnosisCodes('');
+    setDiagnosisCodes([]);
     setEmployerName('');
     setStartDate('');
     setEndDate('');
+  };
+
+  const handleDiagnosisCodes = (event: SelectChangeEvent<typeof diagnosisCodes>) => {
+    const {
+      target: { value },
+    } = event;
+    setDiagnosisCodes(
+      typeof value === 'string' ? value.split(',') : value,
+    );
   };
 
   return (
     <form onSubmit={addEntry}>
       <TextField
         label="Description"
-        fullWidth 
+        fullWidth
+        required
         value={description}
         onChange={({ target }) => setDescription(target.value)}
       />
-      <TextField
-        label="Date"
+      <InputLabel htmlFor="dateLabel">Date</InputLabel>
+      <Input
+        id="dateLabel"
+        type="date"
         placeholder="YYYY-MM-DD"
         fullWidth
+        required
         value={date}
         onChange={({ target }) => setDate(target.value)}
       />
       <TextField
         label="Specialist"
         fullWidth
+        required
         value={specialist}
         onChange={({ target }) => setSpecialist(target.value)}
       />
-      <TextField
-        label="Diagnosis Codes"
+      <InputLabel id="diagnosisCodesLabel">Diagnosis Codes</InputLabel>
+      <Select
+        labelId="diagnosisCodesLabel"
         fullWidth
+        multiple
         value={diagnosisCodes}
-        onChange={({ target }) => setDiagnosisCodes(target.value)}
-      />
+        onChange={handleDiagnosisCodes}
+      >
+        {diagnoses?.map((diagnosis) => (
+          <MenuItem
+            key={diagnosis.code}
+            value={diagnosis.code}
+          >
+            {diagnosis.code} - {diagnosis.name}
+          </MenuItem>
+        ))}
+      </Select>
       <TextField
         label="Employer name"
         fullWidth
+        required
         value={employerName}
         onChange={({ target }) => setEmployerName(target.value)}
       />
-      <TextField
-        label="Sick leave start"
+      <InputLabel htmlFor="sickLeaveStartLabel">Sick leave start</InputLabel>
+      <Input
+        id="sickLeaveStartLabel"
+        type="date"
+        placeholder="YYYY-MM-DD"
         fullWidth
         value={startDate}
         onChange={({ target }) => setStartDate(target.value)}
       />
-      <TextField
-        label="Sick leave end"
+      <InputLabel htmlFor="sickLeaveEndLabel">Sick leave end</InputLabel>
+      <Input
+        id="sickLeaveEndLabel"
+        type="date"
+        placeholder="YYYY-MM-DD"
         fullWidth
         value={endDate}
         onChange={({ target }) => setEndDate(target.value)}
