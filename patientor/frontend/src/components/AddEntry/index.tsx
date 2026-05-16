@@ -15,7 +15,7 @@ interface Props {
 }
 
 const AddEntry = ({ modalOpen, onClose, onSubmit, diagnoses, error }: Props) => {
-  const [type, setType] = useState<string>('');
+  const [type, setType] = useState<string>('HealthCheck');
 
   const changeEntryType = (event: SelectChangeEvent) => {
     setType(event.target.value);
